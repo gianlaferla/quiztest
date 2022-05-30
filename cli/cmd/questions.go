@@ -10,6 +10,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	models "QuizTest/models"
+
 	"github.com/spf13/cobra"
 )
 
@@ -37,26 +39,19 @@ func init() {
 	// questionsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-type question struct {
-	ID            int       `json:"id"`
-	Question      string    `json:"question"`
-	AllAnswers    [4]string `json:"allAnswers"`
-	CorrectAnswer int       `json:"correctAnswer"`
-}
-
 func getQuestions() {
-	url := "localhost:8080/quiz"
+	url := "http://localhost:8080/quiz"
 	responseBytes := getQuestionsData(url)
-	allQuestions := []question{}
+	allQuestions := [4]models.Question{}
 
 	if err := json.Unmarshal(responseBytes, &allQuestions); err != nil {
-		fmt.Printf("Could not unmarshal response - %w", err)
+		fmt.Printf("Could not unmarshal response")
 	}
 
-	for _, question := range allQuestions {
-		fmt.Println(question.Question)
-		for i, answer := range question.AllAnswers {
-			fmt.Printf("%d) %s\n", i, answer)
+	for i, question := range allQuestions {
+		fmt.Printf("Question %d: %s\n", i+1, question.Question)
+		for i2, answer := range question.AllAnswers {
+			fmt.Printf("%d) %s\n", i2+1, answer)
 		}
 		fmt.Println("------------------------------------")
 	}
@@ -69,19 +64,19 @@ func getQuestionsData(baseApi string) []byte {
 		nil,
 	)
 	if err != nil {
-		fmt.Printf("Could not request the questions - %w", err)
+		fmt.Printf("Could not create the request:\n\n%s\n", err)
 	}
 
 	request.Header.Add("Accept", "application/json")
 
 	response, err := http.DefaultClient.Do(request)
 	if err != nil {
-		fmt.Printf("Could not request the questions - %w", err)
+		fmt.Printf("Could not request the questions:\n\n%s\n", err)
 	}
 
 	responseBytes, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		fmt.Printf("Could not read body - %w", err)
+		fmt.Printf("Could not read the body:\n\n%s\n", err)
 	}
 
 	return responseBytes

@@ -5,21 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
+	models "QuizTest/models"
+
 	"github.com/gin-gonic/gin"
 )
 
-type question struct {
-	ID            int       `json:"id"`
-	Question      string    `json:"question"`
-	AllAnswers    [4]string `json:"allAnswers"`
-	CorrectAnswer int       `json:"correctAnswer"`
-}
-
-type quizResult struct {
-	QuizAnswers [4]int `json:"quizAnswers"`
-}
-
-var questions = []question{
+var questions = []models.Question{
 	{ID: 1, Question: "Q1", AllAnswers: [4]string{"w1", "w1", "w1", "c1"}, CorrectAnswer: 4},
 	{ID: 2, Question: "Q2", AllAnswers: [4]string{"w2", "c2", "w2", "w2"}, CorrectAnswer: 2},
 	{ID: 3, Question: "Q3", AllAnswers: [4]string{"w3", "c3", "w3", "w3"}, CorrectAnswer: 2},
@@ -33,25 +24,30 @@ func getQuiz(c *gin.Context) {
 }
 
 func postResults(c *gin.Context) {
-	var results quizResult
+	var results models.Answers
 	var correctAnswers int = 0
 	var correctPercentage int = 0
 	if err := c.BindJSON(&results); err != nil {
 		return
 	}
 
-	for i, q := range results.QuizAnswers {
+	for i, q := range results.Answers {
 		if questions[i].CorrectAnswer == q {
 			correctAnswers++
+		} else {
+			fmt.Printf("%d != %d", questions[i].CorrectAnswer, q)
 		}
 	}
 
+	fmt.Printf("correct answers = %d ", correctAnswers)
 	correctPercentage = correctAnswers * 100 / len(questions)
-	fmt.Printf("You have answered %d questions correctly\n", correctAnswers)
-	compareResult(correctPercentage)
+
+	comparison := compareResult(correctPercentage)
+	toReturn := fmt.Sprintf("You have answered %d questions correctly. %s", correctAnswers, comparison)
+	c.IndentedJSON(http.StatusAccepted, toReturn)
 }
 
-func compareResult(result int) {
+func compareResult(result int) string {
 	var worseResults int = 0
 
 	for _, i := range otherResults {
@@ -61,12 +57,12 @@ func compareResult(result int) {
 	}
 
 	var betterThan int = worseResults * 100 / len(otherResults)
-	fmt.Printf("Your result is better than %d%% of the participants", betterThan)
+	return fmt.Sprintf("Your result is better than %d%% of the participants", betterThan)
 }
 
 func main() {
 	router := gin.Default()
 	router.GET("/quiz", getQuiz)
+	router.POST("/answers", postResults)
 	router.Run("localhost:8080")
-	router.POST("/quiz", postResults)
 }
