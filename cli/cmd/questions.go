@@ -18,7 +18,7 @@ import (
 // questionsCmd represents the questions command
 var questionsCmd = &cobra.Command{
 	Use:   "questions",
-	Short: "This command is used to view all the questions in the quiz",
+	Short: "This command is used to view all the questions",
 	Long:  `This command is used to view all the questions in the quiz`,
 	Run: func(cmd *cobra.Command, args []string) {
 		getQuestions()
@@ -27,33 +27,24 @@ var questionsCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(questionsCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// questionsCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// questionsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 func getQuestions() {
 	url := "http://localhost:8080/quiz"
 	responseBytes := getQuestionsData(url)
-	allQuestions := [4]models.Question{}
+	allQuestions := []models.Question{}
 
 	if err := json.Unmarshal(responseBytes, &allQuestions); err != nil {
 		fmt.Printf("Could not unmarshal response")
+		return
 	}
 
 	for i, question := range allQuestions {
-		fmt.Printf("Question %d: %s\n", i+1, question.Question)
+		fmt.Printf("Question %d: %s\n\n", i+1, question.Question)
 		for i2, answer := range question.AllAnswers {
 			fmt.Printf("%d) %s\n", i2+1, answer)
 		}
-		fmt.Println("------------------------------------")
+		fmt.Println("-----------------------------------------------------------------")
 	}
 }
 

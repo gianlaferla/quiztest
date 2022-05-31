@@ -1,0 +1,12 @@
+[
+	{"ID": 1, "Question": "Who was elected President of the United States in 2017?", "AllAnswers": ["Donald Trump", "Barack Obama", "George Bush"], "CorrectAnswer": 1},
+	{"ID": 2, "Question": "When did Jonas Brothers make their comeback to the music world?", "AllAnswers": ["2015", "2011", "2019"], "CorrectAnswer": 3},
+	{"ID": 3, "Question": "What is the national language of Canada?", "AllAnswers": ["English", "Dutch", "French"],"CorrectAnswer": 2},
+	{"ID": 4, "Question": "What is the national animal of Pakistan?", "AllAnswers": ["Peacock", "Markhor", "Lion"], "CorrectAnswer": 2},
+	{"ID": 5, "Question": "A la Crecy is a French dish made of what?", "AllAnswers": ["Apples", "Carrots", "Potatoes"], "CorrectAnswer": 2},
+	{"ID": 6, "Question": "What native country is Brazil?", "AllAnswers": ["South American", "North American", "West American"], "CorrectAnswer": 2},
+	{"ID": 7, "Question": "Which core ingredient is important to cook a savory dish?", "AllAnswers": ["Salt", "Butter", "Sugar"], "CorrectAnswer": 1},
+	{"ID": 8, "Question": "Brazil is the biggest producer of?", "AllAnswers": ["Rice", "Oil", "Coffee"], "CorrectAnswer": 3},
+	{"ID": 9, "Question": "Saudi Arabia is the biggest producer of?", "AllAnswers": ["Oil", "Coal", "Coffee"], "CorrectAnswer": 1},
+	{"ID": 10, "Question": "Which country is infamously known as Arch Rival of Pakistan?", "AllAnswers": ["Afghanistan", "America", "India"], "CorrectAnswer": 3}
+]

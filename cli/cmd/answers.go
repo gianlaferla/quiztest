@@ -10,19 +10,23 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
+
+	models "QuizTest/models"
 
 	"github.com/spf13/cobra"
 )
 
-// answersCmd represents the answers command
 var answersCmd = &cobra.Command{
 	Use:   "answers",
-	Short: "Pass the answers and get the results",
-	Long:  `Pass the answers and get the results`,
+	Short: "Post answers to quiz api",
+	Long:  `Post the answers from the questions.json file to the quiz api to get the results.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		postAnswers()
 	},
 }
+
+var answers = models.Answers{}
 
 func postAnswers() {
 	url := "http://localhost:8080/answers"
@@ -31,10 +35,8 @@ func postAnswers() {
 }
 
 func postAnswersData(baseApi string) []byte {
-	answerData := quizstructs.answers{Answers: [4]int{4, 2, 2, 1}}
-	json_data, err := json.Marshal(answerData)
-
-	fmt.Println(string(json_data))
+	initAnswers()
+	json_data, err := json.Marshal(answers)
 
 	if err != nil {
 		fmt.Println(err)
@@ -58,16 +60,23 @@ func postAnswersData(baseApi string) []byte {
 	return responseBytes
 }
 
+func initAnswers() {
+	answersJSONFile := "answers.json"
+	file, err := ioutil.ReadFile("../" + answersJSONFile)
+
+	if err != nil {
+		fmt.Printf("Unable to read %s", answersJSONFile)
+		os.Exit(4)
+	} else {
+		err = json.Unmarshal([]byte(file), &answers)
+	}
+
+	if err != nil {
+		fmt.Printf("Unable to unmarshal data from %s", answersJSONFile)
+		os.Exit(4)
+	}
+}
+
 func init() {
 	rootCmd.AddCommand(answersCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// answersCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// answersCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
