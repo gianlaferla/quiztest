@@ -7,7 +7,7 @@ The 'api' folder contains a simple api which accepts the following requests:
 
 How to run
 
-1) First run the api server locally in cmd. The questions for the api are stored in 'answers.json' which should be in the relative path. Run the following: 
+1) First download the repo and run the api server locally in the terminal. The questions for the api are stored in 'answers.json' which should be in the relative path. Run the following: 
 ```cmd 
 cd quiztest/api 
 \quiztest\api> go run main.go
